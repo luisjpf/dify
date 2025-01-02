@@ -1,0 +1,19 @@
+identity:
+  name: add_text_neo4j
+  author: LuisP
+  label:
+    en_US: Add Text to Neo4J
+description:
+  human:
+    en_US: Add text as a node in the Neo4J database.
+  llm: Add text as a node in the Neo4J database.
+parameters:
+  - name: text
+    type: string
+    required: true
+    label:
+      en_US: Text to Add
+    llm_description: The text to add as a new node.
+    human_description:
+      en_US: The text to add to Neo4J database.
+    form: llm

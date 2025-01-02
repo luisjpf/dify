@@ -72,6 +72,10 @@ RUN python -c "import nltk; nltk.download('punkt'); nltk.download('averaged_perc
 # Copy source code
 COPY . /app/api/
 
+# Add additional package
+RUN poetry add neo4j
+RUN poetry lock
+
 # Copy entrypoint
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
