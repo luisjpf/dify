@@ -1,6 +1,6 @@
 from neo4j import GraphDatabase
 from core.tools.tool.builtin_tool import BuiltinTool
-from core.tools.errors import ToolInvocationError  # Custom error for signaling workflow issues
+from core.tools.errors import ToolInvokeError  # Correctly import ToolInvokeError
 
 class QueryNeo4JTool(BuiltinTool):
     def _invoke(self, user_id, tool_parameters):
@@ -15,7 +15,7 @@ class QueryNeo4JTool(BuiltinTool):
             A message indicating the query results or operation status.
 
         Raises:
-            ToolInvocationError: If the query execution fails or the operation does not succeed.
+            ToolInvokeError: If the query execution fails or the operation does not succeed.
         """
         # Fetch credentials
         bolt_url = self.runtime.credentials['bolt_url']
@@ -25,7 +25,7 @@ class QueryNeo4JTool(BuiltinTool):
         # Validate the 'query' parameter
         query = tool_parameters.get('query')
         if not query:
-            raise ToolInvocationError("No query provided. Please specify a Cypher query to execute.")
+            raise ToolInvokeError("No query provided. Please specify a Cypher query to execute.")
 
         # Create a driver instance
         driver = GraphDatabase.driver(bolt_url, auth=(username, password))
@@ -40,9 +40,9 @@ class QueryNeo4JTool(BuiltinTool):
                 # Check if query was a modification query
                 summary = result.consume()
                 query_type = summary.query_type  # E.g., 'r' for READ, 'w' for WRITE
-                
+
                 if query_type == "r" and not records:
-                    raise ToolInvocationError("The query executed successfully but returned no results.")
+                    raise ToolInvokeError("The query executed successfully but returned no results.")
                 elif query_type == "w":
                     return self.create_text_message(
                         text=f"Query succeeded. {summary.counters} modifications were made."
@@ -53,7 +53,7 @@ class QueryNeo4JTool(BuiltinTool):
 
         except Exception as e:
             # Handle and propagate errors
-            raise ToolInvocationError(f"Error executing query: {e}")
+            raise ToolInvokeError(f"Error executing query: {e}")
 
         finally:
             # Ensure the driver is closed
