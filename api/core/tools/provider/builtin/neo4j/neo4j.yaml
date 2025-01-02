@@ -4,7 +4,7 @@ identity:
   label:
     en_US: Neo4J
   description:
-    en_US: Provider for interacting with a Neo4J database via queries and text addition.
+    en_US: Provider for interacting with a Neo4J database via Cypher queries.
   icon: icon.svg
 credentials_for_provider:
   bolt_url:
