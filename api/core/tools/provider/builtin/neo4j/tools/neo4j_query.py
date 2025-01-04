@@ -12,49 +12,58 @@ class QueryNeo4JTool(BuiltinTool):
             tool_parameters: A dictionary containing tool parameters, including the Cypher query.
 
         Returns:
-            A message indicating the query results or operation status.
+            A text message with query results if any, or a success message if there are no results.
 
         Raises:
-            ToolInvokeError: If the query execution fails or the operation does not succeed.
+            ToolInvokeError: If the query execution fails.
         """
         # Fetch credentials
-        bolt_url = self.runtime.credentials['bolt_url']
-        username = self.runtime.credentials['username']
-        password = self.runtime.credentials['password']
+        bolt_url = self.runtime.credentials["bolt_url"]
+        username = self.runtime.credentials["username"]
+        password = self.runtime.credentials["password"]
 
         # Validate the 'query' parameter
-        query = tool_parameters.get('query')
+        query = tool_parameters.get("query")
         if not query:
             raise ToolInvokeError("No query provided. Please specify a Cypher query to execute.")
 
-        # Create a driver instance
         driver = GraphDatabase.driver(bolt_url, auth=(username, password))
         try:
-            # Open a session and execute the query
+            # Start a new session
             with driver.session() as session:
-                result = session.run(query)
+                # Optional: explicit transaction for clarity/best practice
+                with session.begin_transaction() as tx:
+                    result = tx.run(query)
 
-                # Retrieve records if the query is expected to return data
-                records = [record.data() for record in result]
+                    # Collect all records
+                    records = [record.data() for record in result]
+                    summary = result.consume()
 
-                # Check if query was a modification query
-                summary = result.consume()
-                query_type = summary.query_type  # E.g., 'r' for READ, 'w' for WRITE
+                    # Check if the query caused any modifications
+                    # (e.g., created or updated nodes/relationships)
+                    if summary.counters.contains_updates():
+                        # Return a message about the modifications
+                        return self.create_text_message(
+                            text=f"Query succeeded. Modifications: {summary.counters}"
+                        )
+                    else:
+                        # For read queries or queries with no updates:
+                        if records:
+                            return self.create_text_message(
+                                text=f"Query succeeded. Results: {records}"
+                            )
+                        else:
+                            return self.create_text_message(
+                                text="Query succeeded but returned no results."
+                            )
 
-                if query_type == "r" and not records:
-                    raise ToolInvokeError("The query executed successfully but returned no results.")
-                elif query_type == "w":
-                    return self.create_text_message(
-                        text=f"Query succeeded. {summary.counters} modifications were made."
-                    )
-
-                # Return query result
-                return self.create_text_message(text=f"Query succeeded. Results: {records}")
+                    # If it's a write query, we commit the transaction
+                    tx.commit()
 
         except Exception as e:
-            # Handle and propagate errors
+            # Wrap and re-raise any error as ToolInvokeError
             raise ToolInvokeError(f"Error executing query: {e}")
 
         finally:
-            # Ensure the driver is closed
+            # Make sure the driver is closed
             driver.close()
