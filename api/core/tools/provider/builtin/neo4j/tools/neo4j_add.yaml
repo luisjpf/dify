@@ -9,7 +9,7 @@ description:
   llm: Add nodes and relationships to the Neo4J database.
 parameters:
   - name: nodes
-    type: list
+    type: string
     required: true
     label:
       en_US: Nodes
@@ -30,7 +30,7 @@ parameters:
         ]
     form: llm
   - name: relationships
-    type: list
+    type: string
     required: false
     label:
       en_US: Relationships
