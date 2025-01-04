@@ -1,3 +1,4 @@
+import json
 from neo4j import GraphDatabase
 from core.tools.tool.builtin_tool import BuiltinTool
 from core.tools.errors import ToolInvokeError
@@ -37,8 +38,14 @@ class AdvancedInsertDataNeo4JTool(BuiltinTool):
     """
 
     def _invoke(self, user_id, tool_parameters):
-        nodes = tool_parameters.get("nodes", [])
-        relationships = tool_parameters.get("relationships", [])
+        nodes_str = tool_parameters.get("nodes", "[]")
+        relationships_str = tool_parameters.get("relationships", "[]")
+
+        try:
+            nodes = json.loads(nodes_str)
+            relationships = json.loads(relationships_str)
+        except json.JSONDecodeError as e:
+            raise ToolInvokeError(f"Invalid JSON format: {e}")
 
         if not nodes:
             raise ToolInvokeError("At least one node definition is required.")
