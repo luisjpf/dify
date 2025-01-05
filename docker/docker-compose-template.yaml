@@ -53,11 +53,11 @@ services:
 
   # Frontend web application.
   web:
-#    image: langgenius/dify-web:0.14.2
-    image: dify-web-custom
+    image: langgenius/dify-web:0.14.2
+#    image: dify-web-custom
     container_name: dify-web
-    build:
-      context: ../web
+#    build:
+#      context: ../web
     restart: always
     environment:
 #      NODE_ENV: development
