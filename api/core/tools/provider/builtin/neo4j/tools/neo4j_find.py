@@ -1,4 +1,5 @@
 from neo4j import GraphDatabase
+import json
 from core.tools.tool.builtin_tool import BuiltinTool
 from core.tools.errors import ToolInvokeError
 
@@ -45,8 +46,14 @@ class AdvancedQueryDataNeo4JTool(BuiltinTool):
     """
 
     def _invoke(self, user_id, tool_parameters):
-        patterns = tool_parameters.get("patterns", [])
-        return_aliases = tool_parameters.get("return_aliases", [])
+        patterns_str = tool_parameters.get("patterns", "[]")
+        return_aliases_str = tool_parameters.get("return_aliases", "[]")
+
+        try:
+            patterns = json.loads(patterns_str)
+            return_aliases = json.loads(return_aliases_str)
+        except json.JSONDecodeError as e:
+            raise ToolInvokeError(f"Invalid JSON format: {e}")
 
         if not patterns:
             raise ToolInvokeError("No patterns provided for advanced query.")

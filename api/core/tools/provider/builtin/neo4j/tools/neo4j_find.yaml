@@ -18,7 +18,7 @@ parameters:
       en_US: The Cypher query to execute.
     form: llm
   - name: patterns
-    type: list
+    type: string
     required: true
     label:
       en_US: Patterns
@@ -45,7 +45,7 @@ parameters:
         ]
     form: llm
   - name: return_aliases
-    type: list
+    type: string
     required: false
     label:
       en_US: Return Aliases
