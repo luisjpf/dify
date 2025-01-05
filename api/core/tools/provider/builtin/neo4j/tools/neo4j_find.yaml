@@ -8,15 +8,6 @@ description:
     en_US: Find nodes in the Neo4J database.
   llm: Find nodes in the Neo4J database.
 parameters:
-  - name: query
-    type: string
-    required: true
-    label:
-      en_US: Query string
-    llm_description: The Cypher query to execute.
-    human_description:
-      en_US: The Cypher query to execute.
-    form: llm
   - name: patterns
     type: string
     required: true
