@@ -388,11 +388,18 @@ x-shared-env: &shared-api-worker-env
   CREATE_TIDB_SERVICE_JOB_ENABLED: ${CREATE_TIDB_SERVICE_JOB_ENABLED:-false}
   MAX_SUBMIT_COUNT: ${MAX_SUBMIT_COUNT:-100}
   TOP_K_MAX_VALUE: ${TOP_K_MAX_VALUE:-10}
+  NEO4J_BOLT_URL: ${NEO4J_BOLT_URL:-bolt://192.168.50.166:7687}
+  NEO4J_USERNAME: ${NEO4J_USERNAME:-neo4j}
+  NEO4J_PASSWORD: ${NEO4J_PASSWORD:-password}
 
 services:
   # API service
   api:
     image: langgenius/dify-api:0.15.0
+    image: dify-api-custom
+    container_name: dify-api
+    build:
+      context: ../api
     restart: always
     environment:
       # Use the shared environment variables.
@@ -416,6 +423,10 @@ services:
   # The Celery worker for processing the queue.
   worker:
     image: langgenius/dify-api:0.15.0
+    image: dify-api-custom
+    build:
+      context: ../api
+    container_name: dify-worker
     restart: always
     environment:
       # Use the shared environment variables.
@@ -438,8 +449,15 @@ services:
   # Frontend web application.
   web:
     image: langgenius/dify-web:0.15.0
+    image: langgenius/dify-web:0.14.2
+#    image: dify-web-custom
+    container_name: dify-web
+#    build:
+#      context: ../web
     restart: always
     environment:
+#      NODE_ENV: development
+#      DEPLOY_ENV: DEVELOPMENT
       CONSOLE_API_URL: ${CONSOLE_API_URL:-}
       APP_API_URL: ${APP_API_URL:-}
       SENTRY_DSN: ${WEB_SENTRY_DSN:-}

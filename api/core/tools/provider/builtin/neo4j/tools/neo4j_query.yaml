@@ -1,0 +1,19 @@
+identity:
+  name: query_neo4j
+  author: LuisP
+  label:
+    en_US: Query Neo4J
+description:
+  human:
+    en_US: Execute a query on the Neo4J database.
+  llm: Execute a query on the Neo4J database.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+    llm_description: The Cypher query to execute.
+    human_description:
+      en_US: The Cypher query to execute.
+    form: llm

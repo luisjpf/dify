@@ -102,6 +102,7 @@ zhipuai = "~2.1.5"
 # Related transparent dependencies with pinned version
 # required by main implementations
 ############################################################
+neo4j = "^5.27.0"
 [tool.poetry.group.indirect.dependencies]
 kaleido = "0.2.1"
 rank-bm25 = "~0.2.2"

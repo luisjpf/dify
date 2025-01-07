@@ -1,0 +1,50 @@
+identity:
+  name: find_neo4j
+  author: LuisP
+  label:
+    en_US: Query Neo4J to find nodes
+description:
+  human:
+    en_US: Find nodes in the Neo4J database.
+  llm: Find nodes in the Neo4J database.
+parameters:
+  - name: patterns
+    type: string
+    required: true
+    label:
+      en_US: Patterns
+    llm_description: >
+      The patterns to match in the query. Each pattern can be a node or a relationship.
+      Example:
+      [
+        {"alias": "a", "label": "Person", "filters": {"name": "Alice"}},
+        {"relationship_type": "KNOWS", "direction": "OUTGOING"},
+        {"alias": "b", "label": "Person", "filters": {"age": 30}},
+        {"relationship_type": "WORKS_AT", "direction": "INCOMING"},
+        {"alias": "c", "label": "Company", "filters": {"name": "Acme"}}
+      ]
+    human_description:
+      en_US: >
+        The patterns to match in the query. Each pattern can be a node or a relationship.
+        Example:
+        [
+          {"alias": "a", "label": "Person", "filters": {"name": "Alice"}},
+          {"relationship_type": "KNOWS", "direction": "OUTGOING"},
+          {"alias": "b", "label": "Person", "filters": {"age": 30}},
+          {"relationship_type": "WORKS_AT", "direction": "INCOMING"},
+          {"alias": "c", "label": "Company", "filters": {"name": "Acme"}}
+        ]
+    form: llm
+  - name: return_aliases
+    type: string
+    required: false
+    label:
+      en_US: Return Aliases
+    llm_description: >
+      The aliases of nodes to return. If not specified, all found node aliases will be returned.
+      Example: ["a", "b", "c"]
+    human_description:
+      en_US: >
+        The aliases of nodes to return. If not specified, all found node aliases will be returned.
+        Example: ["a", "b", "c"]
+    form: llm

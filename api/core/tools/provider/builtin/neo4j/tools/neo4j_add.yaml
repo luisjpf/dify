@@ -1,0 +1,50 @@
+identity:
+  name: add_neo4j
+  author: LuisP
+  label:
+    en_US: Add nodes and relationships to Neo4J
+description:
+  human:
+    en_US: Add nodes and relationships to the Neo4J database.
+  llm: Add nodes and relationships to the Neo4J database.
+parameters:
+  - name: nodes
+    type: string
+    required: true
+    label:
+      en_US: Nodes
+    llm_description: >
+      The nodes to add to the database. Each node must have an alias, a label, and properties.
+      Example:
+      [
+        {"alias": "alice", "label": "Person", "properties": {"name": "Alice", "age": 30}},
+        {"alias": "acme", "label": "Company", "properties": {"name": "AcmeCorp"}}
+      ]
+    human_description:
+      en_US: >
+        The nodes to add to the database. Each node must have an alias, a label, and properties.
+        Example:
+        [
+          {"alias": "alice", "label": "Person", "properties": {"name": "Alice", "age": 30}},
+          {"alias": "acme", "label": "Company", "properties": {"name": "AcmeCorp"}}
+        ]
+    form: llm
+  - name: relationships
+    type: string
+    required: false
+    label:
+      en_US: Relationships
+    llm_description: >
+      The relationships to add between nodes. Each relationship must specify the from_alias, to_alias, type, and direction.
+      Example:
+      [
+        {"from_alias": "alice", "to_alias": "acme", "type": "WORKS_AT", "direction": "OUTGOING"}
+      ]
+    human_description:
+      en_US: >
+        The relationships to add between nodes. Each relationship must specify the from_alias, to_alias, type, and direction.
+        Example:
+        [
+          {"from_alias": "alice", "to_alias": "acme", "type": "WORKS_AT", "direction": "OUTGOING"}
+        ]
+    form: llm
