@@ -447,11 +447,7 @@ services:
 
   # Frontend web application.
   web:
-    image: langgenius/dify-web:0.14.2
-    #    image: dify-web-custom
-    container_name: dify-web
-    #    build:
-    #      context: ../web
+    image: langgenius/dify-web:0.15.1
     restart: always
     environment:
       #      NODE_ENV: development
